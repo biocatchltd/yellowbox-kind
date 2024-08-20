@@ -10,7 +10,6 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import TYPE_CHECKING, AsyncGenerator, Union
 from uuid import uuid4
-from warnings import warn
 
 from kubernetes.client import ApiClient
 from kubernetes.config import new_client_from_config
@@ -55,7 +54,7 @@ class KindClusterService(YellowService):
 
     def _infer_cluster_config(self) -> None:
         if not self.cluster_name:
-            existing_clusters = (
+            existing_clusters = frozenset(
                 subprocess.check_output([self.kind_path, "get", "clusters"], text=True).strip().splitlines()
             )
             # note that if there are no existing clusters, we will return a list with only one item: the response
@@ -75,13 +74,13 @@ class KindClusterService(YellowService):
             base_config_path = Path(self.base_config_path)
             if (
                 self.cluster_name
-                and not (cand_path := (base_config_path / ("kubeconfig-" + self.cluster_name))).exists()
+                and not (cand_path := (base_config_path / ("kubeconfig-" + self.cluster_name + ".yaml"))).exists()
             ):
                 self.config_path = cand_path
                 return
             # generate a unique filename in the directory
             while True:
-                self.config_path = base_config_path / ("kubeconfig-" + uuid4().hex[:8])
+                self.config_path = base_config_path / ("kubeconfig-" + uuid4().hex[:8] + ".yaml")
                 if not self.config_path.exists():
                     return
         self.config_path = Path(self.base_config_path)
@@ -137,10 +136,13 @@ class KindClusterService(YellowService):
     def _cleanup(self):
         if self._namespace_manager is not None:
             if self._namespace_manager.created_namespaces:
-                msg = "Some namespaces were not deleted before the cluster was stopped: " + str(
-                    sorted(self._namespace_manager.created_namespaces)
+                # this should only be possible through some improper use of the service,
+                # since the namespace manager is private, and only exposes the context manager
+                # methods
+                raise RuntimeError(
+                    "There are still temporary namespaces created by the service, to explicitly create "
+                    "a namespace that outlives the cluster, use the kubernetes client directly"
                 )
-                warn(msg, stacklevel=2)
             self._namespace_manager.delete_all_created()
         if self._client is not None:
             self._client.close()

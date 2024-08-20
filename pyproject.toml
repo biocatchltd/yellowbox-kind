@@ -53,7 +53,9 @@ combine-as-imports=true
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = [
-    "PT011"
+    "PT011",
+    "PT004",
+    "SLF001"
 ]
 
 [tool.mypy]
