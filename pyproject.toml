@@ -4,7 +4,6 @@ version = "0.1.0"
 description = ""
 authors = ["biocatch ltd"]
 license = "MIT"
-readme = "README.md"
 repository = "https://github.com/biocatchltd/yellowbox-kind"
 
 [tool.poetry.dependencies]
