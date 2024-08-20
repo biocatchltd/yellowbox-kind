@@ -1,6 +1,5 @@
-from collections.abc import Generator, MutableSet
 from contextlib import contextmanager
-from typing import Union
+from typing import Generator, MutableSet, Union
 from uuid import uuid4
 
 from kubernetes.client import ApiClient, ApiException, CoreV1Api, V1Namespace, V1ObjectMeta

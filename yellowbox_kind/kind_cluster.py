@@ -3,12 +3,11 @@ from __future__ import annotations
 import asyncio.subprocess as asyncio_subprocess
 import os
 import subprocess
-from collections.abc import Generator
 from contextlib import AbstractContextManager, asynccontextmanager, contextmanager
 from os import PathLike
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import TYPE_CHECKING, AsyncGenerator, Union
+from typing import TYPE_CHECKING, AsyncGenerator, Generator, Union
 from uuid import uuid4
 
 from kubernetes.client import ApiClient
