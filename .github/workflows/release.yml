@@ -50,7 +50,7 @@ jobs:
     - name: Upload Binaries to Release
       uses: svenstaro/upload-release-action@v2
       with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        repo_token: ${{ secrets.BC_AUTOMATIONS_PUBLIC_TOKEN }}
         file: dist/*
         tag: ${{ github.ref }}
         overwrite: true
