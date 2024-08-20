@@ -1,12 +1,13 @@
 from collections.abc import Generator, MutableSet
 from contextlib import contextmanager
+from typing import Union
 from uuid import uuid4
 
 from kubernetes.client import ApiClient, ApiException, CoreV1Api, V1Namespace, V1ObjectMeta
 
 
 class NamespaceManager:
-    def __init__(self, client: ApiClient | CoreV1Api):
+    def __init__(self, client: Union[ApiClient, CoreV1Api]):
         if isinstance(client, ApiClient):
             self.client = CoreV1Api(client)
         else:
