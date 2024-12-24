@@ -48,7 +48,7 @@ jobs:
         poetry publish -u __token__ -p '${{ steps.mint.outputs.api-token }}'
 
     - name: Upload Binaries as Artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: binaries
         path: dist
